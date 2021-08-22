@@ -37,6 +37,7 @@
       </ul>
       <div class="b-icons-block b-icons--mode" style="margin-left: 20px">
         <b-icon
+          class="b-icon"
           icon="sun"
           variant="warning"
           font-scale="1.5"
@@ -44,6 +45,7 @@
           @click="changeMode('dark')"
         ></b-icon>
         <b-icon
+          class="b-icon"
           icon="moon"
           variant="warning"
           font-scale="1.5"
@@ -54,6 +56,7 @@
       </div>
       <div class="b-icons-block b-icons--display" style="margin-left: 20px">
         <b-icon
+          class="b-icon"
           icon="columns"
           variant="warning"
           font-scale="1.5"
@@ -61,6 +64,7 @@
           @click="changeDisplay('list')"
         ></b-icon>
         <b-icon
+          class="b-icon"
           icon="card-list"
           variant="warning"
           font-scale="1.5"

@@ -80,5 +80,8 @@ div.card {
   background-color: var(--styled-card-inside);
   color: var(--text-color);
 }
+.b-icon {
+  cursor: pointer;
+}
 </style>
 
