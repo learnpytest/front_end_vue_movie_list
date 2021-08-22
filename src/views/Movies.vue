@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5" style="min-height: 100vh">
     <!-- data-panel -->
     <div class="container mt-5">
       <!--search bar-->

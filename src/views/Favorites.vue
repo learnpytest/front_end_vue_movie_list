@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-5">
     <!-- data-panel -->
-    <div class="container mt-5" style="height: 100vh">
+    <div class="container mt-5" style="min-height: 100vh">
       <!--search bar-->
       <SearchBar :movies-parent="favorites" style="z-index: -1" />
       <div class="row" id="data-panel">
