@@ -12,7 +12,11 @@
         />
       </div>
     </div>
-    <Modal :movie-modal="movieToShow" />
+    <Modal
+      :movie-modal="movieToShow"
+      :initial-display="display"
+      :initial-mode="mode"
+    />
   </div>
 </template>
 
@@ -43,6 +47,8 @@ export default {
       movies: [],
       movieToShow: {},
       titleToSearch: "",
+      display: "column",
+      mode: "light",
     };
   },
   computed: {
@@ -81,6 +87,8 @@ export default {
   },
   created() {
     this.fetchMovies();
+    this.display = this.$route.params.display;
+    this.mode = this.$route.params.mode;
   },
 
   mounted() {

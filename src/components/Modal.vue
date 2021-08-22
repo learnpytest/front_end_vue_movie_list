@@ -35,7 +35,6 @@
 </template>
 
 <script>
-//test
 import { bus } from "../main";
 
 export default {
@@ -45,11 +44,20 @@ export default {
       type: Object,
       required: true,
     },
+    initialDisplay: {
+      type: String,
+      required: true,
+    },
+    initialMode: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
       movie: this.movieModal,
-      mode: "dark",
+      display: this.initialDisplay,
+      mode: this.initialMode,
     };
   },
   computed: {

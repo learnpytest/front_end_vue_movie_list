@@ -1,12 +1,16 @@
 <template>
   <!--search bar-->
   <div class="row row-bar-search d-flex flex-column mb-3" id="search-bar">
-    <form id="search" class="form-inline" @submit.stop.prevent="search">
+    <form
+      id="search"
+      class="form-inline d-flex justify-content-center align-items-center"
+      @submit.stop.prevent="search"
+    >
       <div class="bg-blank" @click="myAutoComplete = false"></div>
       <label class="sr-only" for="search-input"></label>
       <input
         type="text"
-        class="form-control mb-2 mr-sm-2 mr-3"
+        class="form-control mr-sm-2 mr-3"
         id="search-input"
         placeholder="search name ..."
         autocomplete="off"

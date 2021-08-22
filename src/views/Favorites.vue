@@ -1,17 +1,18 @@
 <template>
   <div class="container mt-5">
     <!-- data-panel -->
-    <div class="container mt-5">
+    <div class="container mt-5" style="height: 100vh">
       <!--search bar-->
       <SearchBar :movies-parent="favorites" style="z-index: -1" />
       <div class="row" id="data-panel">
         <!-- print movie list here -->
         <div
-          class="col-sm-3"
+          :class="display === 'column' ? 'col-sm-3' : 'col-12'"
           v-for="movie in filteredFavorites"
           :key="movie.id"
         >
-          <div class="card mb-2">
+          <!-- Column -->
+          <div class="card mb-2" v-if="display === 'column'">
             <img class="card-img-top" :src="movie.image" alt="Card image cap" />
             <div class="card-body movie-item-body">
               <h5 class="card-title">{{ movie.title }}</h5>
@@ -21,7 +22,35 @@
               <b-button
                 class="card__btn"
                 @click="showModal(movie)"
-                variant="primary mr-2"
+                variant="info mr-2"
+                >More</b-button
+              >
+
+              <!--     Favorite button           -->
+              <button
+                class="card__btn btn btn-danger btn-delete-favorite"
+                @click="deleteFavorite(movie.id)"
+              >
+                -
+              </button>
+            </div>
+          </div>
+
+          <!-- List -->
+          <div
+            class="col-sm-10 card d-flex flex-row align-items-center"
+            v-if="display === 'list'"
+            style="margin: 0 auto"
+          >
+            <div class="card-body movie-item-body">
+              <h5 class="card-title m-0">{{ movie.title }}</h5>
+            </div>
+            <!-- "More" button -->
+            <div class="card-footer" style="border: none">
+              <b-button
+                class="card__btn"
+                @click="showModal(movie)"
+                variant="info mr-2"
                 >More</b-button
               >
 
@@ -39,13 +68,18 @@
     </div>
 
     <!-- Modal -->
-    <Modal :movie-modal="movieToShow" />
+    <Modal
+      :movie-modal="movieToShow"
+      :initial-display="display"
+      :initial-mode="mode"
+    />
   </div>
 </template>
 
 <script>
 import SearchBar from "../components/SearchBar.vue";
 import Modal from "../components/Modal.vue";
+import { bus } from "../main";
 
 const STORAGE_KEY_FAVORITE_MOVIES = "favorite-movies";
 
@@ -55,16 +89,18 @@ const filters = {
 };
 
 export default {
+  name: "Favorites",
   components: {
     SearchBar,
     Modal,
   },
-  name: "Favorites",
   data() {
     return {
       favorites: [],
       titleToSearch: "",
       movieToShow: {},
+      display: "column",
+      mode: "light",
     };
   },
   computed: {
@@ -91,9 +127,15 @@ export default {
     searchMovies(title) {
       this.titleToSearch = title;
     },
+    changeDisplay(display) {
+      this.display = display;
+    },
   },
   created() {
     this.fetchFavorites();
+    this.display = this.$route.params.display;
+    this.mode = this.$route.params.mode;
+    bus.$on("changeDisplay", this.changeDisplay);
   },
   mounted() {
     this.$on("search", this.searchMovies);

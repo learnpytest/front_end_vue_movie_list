@@ -1,8 +1,9 @@
 <template>
   <!-- print movie list here -->
-  <!--Columns-->
-  <div class="col-sm-3">
-    <div class="card mb-2">
+
+  <div :class="display === 'column' ? 'col-sm-3' : 'col-12'">
+    <!--Columns-->
+    <div class="card mb-2" v-if="display === 'column'">
       <img class="card-img-top" :src="movie.image" alt="Card image cap" />
       <div class="card-body movie-item-body">
         <h5 class="card-title">{{ movie.title }}</h5>
@@ -32,10 +33,47 @@
         </b-button>
       </div>
     </div>
+
+    <!-- Lists -->
+    <div
+      class="col-sm-10 card d-flex flex-row align-items-center"
+      v-if="display === 'list'"
+      style="margin: 0 auto"
+    >
+      <div class="card-body movie-item-body">
+        <h5 class="card-title m-0">{{ movie.title }}</h5>
+      </div>
+      <!-- "More" button -->
+      <div class="card-footer" style="border: none">
+        <b-button class="card__btn" @click="emitShowModal" variant="info mr-2"
+          >More</b-button
+        >
+
+        <!--     Favorite button           -->
+        <b-button
+          variant="danger mr-2"
+          class="card__btn btn-delete-favorite"
+          v-if="getFavorite()"
+          @click="deleteFavorite"
+        >
+          -
+        </b-button>
+        <b-button
+          variant="warning"
+          class="card__btn btn-add-favorite"
+          v-else
+          @click="addFavorite"
+        >
+          +
+        </b-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { bus } from "../main";
+
 const STORAGE_KEY_FAVORITE_MOVIES = "favorite-movies";
 const filters = {
   findMovie: (id) => (movies) => movies.find((movie) => movie.id === id),
@@ -52,11 +90,13 @@ export default {
     return {
       movie: this.initialMovie,
       favorites: [],
-      display: "columns",
+      display: "column",
     };
   },
   created() {
     this.fetchFavorite();
+    this.display = this.$route.params.display;
+    bus.$on("changeDisplay", this.changeDisplay);
   },
   watch: {
     favorites: {
@@ -89,6 +129,9 @@ export default {
       this.favorites = this.favorites.filter(
         (movie) => movie.id !== this.movie.id
       );
+    },
+    changeDisplay(display) {
+      this.display = display;
     },
   },
 };

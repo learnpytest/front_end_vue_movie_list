@@ -14,9 +14,9 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(BootstrapVueIcons)
 
+export const bus = new Vue()
+
 new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
-//test
-export const bus = new Vue()

@@ -21,32 +21,53 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <router-link :to="{ name: 'movies' }" class="nav-link"
+          <router-link
+            :to="{ name: 'movies', params: { display, mode } }"
+            class="nav-link"
             >Home
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'favorites' }" class="nav-link"
+          <router-link
+            :to="{ name: 'favorites', params: { display, mode } }"
+            class="nav-link"
             >favorite</router-link
           >
         </li>
       </ul>
-      <div class="b-icons-block" style="margin-left: 20px">
+      <div class="b-icons-block b-icons--mode" style="margin-left: 20px">
         <b-icon
-          icon="moon"
+          icon="sun"
           variant="warning"
           font-scale="1.5"
           v-show="mode === 'light'"
           @click="changeMode('dark')"
         ></b-icon>
         <b-icon
-          icon="sun"
+          icon="moon"
           variant="warning"
           font-scale="1.5"
           v-show="mode === 'dark'"
           @click="changeMode('light')"
         ></b-icon>
-        Switch Mode
+        {{ mode }}
+      </div>
+      <div class="b-icons-block b-icons--display" style="margin-left: 20px">
+        <b-icon
+          icon="columns"
+          variant="warning"
+          font-scale="1.5"
+          v-show="display === 'column'"
+          @click="changeDisplay('list')"
+        ></b-icon>
+        <b-icon
+          icon="card-list"
+          variant="warning"
+          font-scale="1.5"
+          v-show="display === 'list'"
+          @click="changeDisplay('column')"
+        ></b-icon>
+        {{ display }}
       </div>
     </div>
   </nav>
@@ -61,6 +82,7 @@ export default {
   data() {
     return {
       mode: "light",
+      display: "column",
     };
   },
   methods: {
@@ -68,6 +90,10 @@ export default {
       this.mode = mode;
       this.$parent.$emit("changeMode", mode);
       bus.$emit("changeMode", mode);
+    },
+    changeDisplay(display) {
+      this.display = display;
+      bus.$emit("changeDisplay", display);
     },
   },
 };
