@@ -3,20 +3,42 @@
   <div class="row row-bar-search d-flex flex-column mb-3" id="search-bar">
     <form
       id="search"
-      class="form-inline d-flex justify-content-center align-items-center"
+      class="form-inline d-flex justify-content-center align-items-start"
       @submit.stop.prevent="search"
     >
       <div class="bg-blank" @click="myAutoComplete = false"></div>
       <label class="sr-only" for="search-input"></label>
-      <input
-        type="text"
-        class="form-control mr-sm-2 mr-3"
-        id="search-input"
-        placeholder="search name ..."
-        autocomplete="off"
-        v-model="input"
-        @focus="myAutoComplete = true"
-      />
+      <div>
+        <input
+          type="text"
+          class="form-control mr-sm-2 mr-3"
+          id="search-input"
+          placeholder="search name ..."
+          autocomplete="off"
+          v-model="input"
+          @focus="myAutoComplete = true"
+        />
+        <!-- test -->
+        <!--  輸入搜尋關鍵字，並且如果有匹配項目自動完成清單才會顯示      -->
+        <div
+          v-show="inputMatched.length && myAutoComplete"
+          style="z-index: 10; max-width: fit-content"
+          class="mt-2"
+        >
+          <ul
+            style="list-style-type: none; white-space: nowrap"
+            class="p-0 bg-light text-secondary"
+          >
+            <li v-for="(item, index) in inputMatched" :key="index">
+              <a
+                href=""
+                @click.stop.prevent="onMatchedTitleClicked(item.title)"
+                >{{ item.title }}</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <button
         type="submit"
@@ -26,22 +48,6 @@
         Search
       </button>
     </form>
-    <!--  輸入搜尋關鍵字，並且如果有匹配項目自動完成清單才會顯示      -->
-    <div
-      v-show="inputMatched.length && myAutoComplete"
-      style="z-index: 10; max-width: fit-content"
-    >
-      <ul
-        style="list-style-type: none; white-space: nowrap"
-        class="p-0 bg-light text-secondary"
-      >
-        <li v-for="(item, index) in inputMatched" :key="index">
-          <a href="" @click.stop.prevent="onMatchedTitleClicked(item.title)">{{
-            item.title
-          }}</a>
-        </li>
-      </ul>
-    </div>
   </div>
 </template>
 
