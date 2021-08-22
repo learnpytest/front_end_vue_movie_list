@@ -46,11 +46,11 @@ export default {
     },
     initialDisplay: {
       type: String,
-      required: true,
+      default: "column",
     },
     initialMode: {
       type: String,
-      required: true,
+      default: "light",
     },
   },
   data() {
