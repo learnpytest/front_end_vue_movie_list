@@ -12,7 +12,11 @@
       </template>
       <div class="modal-body">
         <div class="row">
-          <img :src="movieModal.image" alt="movie image" class="col-sm-8" />
+          <img
+            :src="movieModal.image"
+            alt="movie image"
+            class="col-sm-8"
+          >
           <div class="col-sm-4">
             <p>
               <em>release at: {{ movieModal.release_date }}</em>

@@ -1,10 +1,19 @@
 <template>
-  <div class="container mt-5" style="min-height: 100vh">
+  <div
+    class="container mt-5"
+    style="min-height: 100vh"
+  >
     <!-- data-panel -->
     <div class="container mt-5">
       <!--search bar-->
-      <SearchBar :movies-parent="movies" style="z-index: -1" />
-      <div class="row" id="data-panel">
+      <SearchBar
+        :movies-parent="movies"
+        style="z-index: -1"
+      />
+      <div
+        id="data-panel"
+        class="row"
+      >
         <MovieCard
           v-for="movie in filteredMovies"
           :key="movie.id"
@@ -60,6 +69,16 @@ export default {
       },
     },
   },
+  created() {
+    this.fetchMovies();
+    this.display = this.$route.params.display;
+    this.mode = this.$route.params.mode;
+  },
+
+  mounted() {
+    this.$on("showModal", this.showModal);
+    this.$on("search", this.searchMovies);
+  },
 
   methods: {
     fetchMovies() {
@@ -84,16 +103,6 @@ export default {
     searchMovies(title) {
       this.titleToSearch = title;
     },
-  },
-  created() {
-    this.fetchMovies();
-    this.display = this.$route.params.display;
-    this.mode = this.$route.params.mode;
-  },
-
-  mounted() {
-    this.$on("showModal", this.showModal);
-    this.$on("search", this.searchMovies);
   },
 };
 </script>

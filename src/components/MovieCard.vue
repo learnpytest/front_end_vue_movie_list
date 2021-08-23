@@ -3,30 +3,43 @@
 
   <div :class="display === 'column' ? 'col-sm-3' : 'col-12'">
     <!--Columns-->
-    <div class="card mb-2" v-if="display === 'column'">
-      <img class="card-img-top" :src="movie.image" alt="Card image cap" />
+    <div
+      v-if="display === 'column'"
+      class="card mb-2"
+    >
+      <img
+        class="card-img-top"
+        :src="movie.image"
+        alt="Card image cap"
+      >
       <div class="card-body movie-item-body">
-        <h5 class="card-title">{{ movie.title }}</h5>
+        <h5 class="card-title">
+          {{ movie.title }}
+        </h5>
       </div>
       <!-- "More" button -->
       <div class="card-footer">
-        <b-button class="card__btn" @click="emitShowModal" variant="info mr-2"
-          >More</b-button
+        <b-button
+          class="card__btn"
+          variant="info mr-2"
+          @click="emitShowModal"
         >
+          More
+        </b-button>
 
         <!--     Favorite button           -->
         <b-button
+          v-if="getFavorite()"
           variant="danger mr-2"
           class="card__btn btn-delete-favorite"
-          v-if="getFavorite()"
           @click="deleteFavorite"
         >
           -
         </b-button>
         <b-button
+          v-else
           variant="warning"
           class="card__btn btn-add-favorite"
-          v-else
           @click="addFavorite"
         >
           +
@@ -36,32 +49,41 @@
 
     <!-- Lists -->
     <div
-      class="col-sm-10 card d-flex flex-row align-items-center"
       v-if="display === 'list'"
+      class="col-sm-10 card d-flex flex-row align-items-center"
       style="margin: 0 auto"
     >
       <div class="card-body movie-item-body">
-        <h5 class="card-title m-0">{{ movie.title }}</h5>
+        <h5 class="card-title m-0">
+          {{ movie.title }}
+        </h5>
       </div>
       <!-- "More" button -->
-      <div class="card-footer" style="border: none">
-        <b-button class="card__btn" @click="emitShowModal" variant="info mr-2"
-          >More</b-button
+      <div
+        class="card-footer"
+        style="border: none"
+      >
+        <b-button
+          class="card__btn"
+          variant="info mr-2"
+          @click="emitShowModal"
         >
+          More
+        </b-button>
 
         <!--     Favorite button           -->
         <b-button
+          v-if="getFavorite()"
           variant="danger mr-2"
           class="card__btn btn-delete-favorite"
-          v-if="getFavorite()"
           @click="deleteFavorite"
         >
           -
         </b-button>
         <b-button
+          v-else
           variant="warning"
           class="card__btn btn-add-favorite"
-          v-else
           @click="addFavorite"
         >
           +
@@ -93,11 +115,6 @@ export default {
       display: "column",
     };
   },
-  created() {
-    this.fetchFavorite();
-    this.display = this.$route.params.display;
-    bus.$on("changeDisplay", this.changeDisplay);
-  },
   watch: {
     favorites: {
       handler: function () {
@@ -105,6 +122,11 @@ export default {
       },
       deep: true,
     },
+  },
+  created() {
+    this.fetchFavorite();
+    this.display = this.$route.params.display;
+    bus.$on("changeDisplay", this.changeDisplay);
   },
   methods: {
     emitShowModal() {

@@ -1,23 +1,32 @@
 <template>
   <!--search bar-->
-  <div class="row row-bar-search d-flex flex-column mb-3" id="search-bar">
+  <div
+    id="search-bar"
+    class="row row-bar-search d-flex flex-column mb-3"
+  >
     <form
       id="search"
       class="form-inline d-flex justify-content-center align-items-start"
       @submit.stop.prevent="search"
     >
-      <div class="bg-blank" @click="myAutoComplete = false"></div>
-      <label class="sr-only" for="search-input"></label>
+      <div
+        class="bg-blank"
+        @click="myAutoComplete = false"
+      />
+      <label
+        class="sr-only"
+        for="search-input"
+      />
       <div>
         <input
+          id="search-input"
+          v-model="input"
           type="text"
           class="form-control mr-sm-2 mr-3"
-          id="search-input"
           placeholder="search name ..."
           autocomplete="off"
-          v-model="input"
           @focus="myAutoComplete = true"
-        />
+        >
         <!-- test -->
         <!--  輸入搜尋關鍵字，並且如果有匹配項目自動完成清單才會顯示      -->
         <div
@@ -29,12 +38,14 @@
             style="list-style-type: none; white-space: nowrap"
             class="p-0 bg-light text-secondary"
           >
-            <li v-for="(item, index) in inputMatched" :key="index">
+            <li
+              v-for="(item, index) in inputMatched"
+              :key="index"
+            >
               <a
                 href=""
                 @click.stop.prevent="onMatchedTitleClicked(item.title)"
-                >{{ item.title }}</a
-              >
+              >{{ item.title }}</a>
             </li>
           </ul>
         </div>
@@ -53,10 +64,11 @@
 
 <script>
 export default {
-  name: "search",
+  name: "Search",
   props: {
     moviesParent: {
       type: Array,
+      default: () => [],
     },
   },
   data() {

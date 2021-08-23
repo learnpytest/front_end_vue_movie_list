@@ -1,30 +1,49 @@
 <template>
   <div class="container mt-5">
     <!-- data-panel -->
-    <div class="container mt-5" style="min-height: 100vh">
+    <div
+      class="container mt-5"
+      style="min-height: 100vh"
+    >
       <!--search bar-->
-      <SearchBar :movies-parent="favorites" style="z-index: -1" />
-      <div class="row" id="data-panel">
+      <SearchBar
+        :movies-parent="favorites"
+        style="z-index: -1"
+      />
+      <div
+        id="data-panel"
+        class="row"
+      >
         <!-- print movie list here -->
         <div
-          :class="display === 'column' ? 'col-sm-3' : 'col-12'"
           v-for="movie in filteredFavorites"
           :key="movie.id"
+          :class="display === 'column' ? 'col-sm-3' : 'col-12'"
         >
           <!-- Column -->
-          <div class="card mb-2" v-if="display === 'column'">
-            <img class="card-img-top" :src="movie.image" alt="Card image cap" />
+          <div
+            v-if="display === 'column'"
+            class="card mb-2"
+          >
+            <img
+              class="card-img-top"
+              :src="movie.image"
+              alt="Card image cap"
+            >
             <div class="card-body movie-item-body">
-              <h5 class="card-title">{{ movie.title }}</h5>
+              <h5 class="card-title">
+                {{ movie.title }}
+              </h5>
             </div>
             <!-- "More" button -->
             <div class="card-footer">
               <b-button
                 class="card__btn"
-                @click="showModal(movie)"
                 variant="info mr-2"
-                >More</b-button
+                @click="showModal(movie)"
               >
+                More
+              </b-button>
 
               <!--     Favorite button           -->
               <button
@@ -38,21 +57,27 @@
 
           <!-- List -->
           <div
-            class="col-sm-10 card d-flex flex-row align-items-center"
             v-if="display === 'list'"
+            class="col-sm-10 card d-flex flex-row align-items-center"
             style="margin: 0 auto"
           >
             <div class="card-body movie-item-body">
-              <h5 class="card-title m-0">{{ movie.title }}</h5>
+              <h5 class="card-title m-0">
+                {{ movie.title }}
+              </h5>
             </div>
             <!-- "More" button -->
-            <div class="card-footer" style="border: none">
+            <div
+              class="card-footer"
+              style="border: none"
+            >
               <b-button
                 class="card__btn"
-                @click="showModal(movie)"
                 variant="info mr-2"
-                >More</b-button
+                @click="showModal(movie)"
               >
+                More
+              </b-button>
 
               <!--     Favorite button           -->
               <button
@@ -112,6 +137,26 @@ export default {
       },
     },
   },
+  watch: {
+    favorites: {
+      handler: function () {
+        localStorage.setItem(
+          STORAGE_KEY_FAVORITE_MOVIES,
+          JSON.stringify(this.favorites)
+        );
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.fetchFavorites();
+    this.display = this.$route.params.display;
+    this.mode = this.$route.params.mode;
+    bus.$on("changeDisplay", this.changeDisplay);
+  },
+  mounted() {
+    this.$on("search", this.searchMovies);
+  },
   methods: {
     showModal(movie) {
       this.movieToShow = movie;
@@ -129,26 +174,6 @@ export default {
     },
     changeDisplay(display) {
       this.display = display;
-    },
-  },
-  created() {
-    this.fetchFavorites();
-    this.display = this.$route.params.display;
-    this.mode = this.$route.params.mode;
-    bus.$on("changeDisplay", this.changeDisplay);
-  },
-  mounted() {
-    this.$on("search", this.searchMovies);
-  },
-  watch: {
-    favorites: {
-      handler: function () {
-        localStorage.setItem(
-          STORAGE_KEY_FAVORITE_MOVIES,
-          JSON.stringify(this.favorites)
-        );
-      },
-      deep: true,
     },
   },
 };

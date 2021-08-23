@@ -1,7 +1,13 @@
 <template>
-  <div id="app" :theme="mode">
+  <div
+    id="app"
+    :theme="mode"
+  >
     <Navbar />
-    <main role="main" class="mt-5">
+    <main
+      role="main"
+      class="mt-5"
+    >
       <router-view />
     </main>
   </div>

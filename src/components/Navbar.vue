@@ -4,9 +4,12 @@
     class="navbar nav-header navbar-expand-lg"
     style="z-index: 10; padding-left: 20px"
   >
-    <router-link class="navbar-brand" :to="{ name: 'root' }"
-      >Movie List</router-link
+    <router-link
+      class="navbar-brand"
+      :to="{ name: 'root' }"
     >
+      Movie List
+    </router-link>
     <button
       class="navbar-toggler"
       type="button"
@@ -16,61 +19,72 @@
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
-      <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon" />
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div
+      id="navbarSupportedContent"
+      class="collapse navbar-collapse"
+    >
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <router-link
             :to="{ name: 'movies', params: { display, mode } }"
             class="nav-link"
-            >Home
+          >
+            Home
           </router-link>
         </li>
         <li class="nav-item">
           <router-link
             :to="{ name: 'favorites', params: { display, mode } }"
             class="nav-link"
-            >favorite</router-link
           >
+            favorite
+          </router-link>
         </li>
       </ul>
-      <div class="b-icons-block b-icons--mode" style="margin-left: 20px">
+      <div
+        class="b-icons-block b-icons--mode"
+        style="margin-left: 20px"
+      >
         <b-icon
+          v-show="mode === 'light'"
           class="b-icon"
           icon="sun"
           variant="warning"
           font-scale="1.5"
-          v-show="mode === 'light'"
           @click="changeMode('dark')"
-        ></b-icon>
+        />
         <b-icon
+          v-show="mode === 'dark'"
           class="b-icon"
           icon="moon"
           variant="warning"
           font-scale="1.5"
-          v-show="mode === 'dark'"
           @click="changeMode('light')"
-        ></b-icon>
+        />
         {{ mode }}
       </div>
-      <div class="b-icons-block b-icons--display" style="margin-left: 20px">
+      <div
+        class="b-icons-block b-icons--display"
+        style="margin-left: 20px"
+      >
         <b-icon
+          v-show="display === 'column'"
           class="b-icon"
           icon="columns"
           variant="warning"
           font-scale="1.5"
-          v-show="display === 'column'"
           @click="changeDisplay('list')"
-        ></b-icon>
+        />
         <b-icon
+          v-show="display === 'list'"
           class="b-icon"
           icon="card-list"
           variant="warning"
           font-scale="1.5"
-          v-show="display === 'list'"
           @click="changeDisplay('column')"
-        ></b-icon>
+        />
         {{ display }}
       </div>
     </div>
