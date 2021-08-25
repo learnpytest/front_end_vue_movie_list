@@ -18,6 +18,8 @@
           v-for="movie in filteredMovies"
           :key="movie.id"
           :initial-movie="movie"
+          :is-favorite="isFavorite(movie.id)"
+          @showModal="showModal(movie)"
         />
       </div>
     </div>
@@ -38,11 +40,14 @@ const BASE_URL = "https://movie-list.alphacamp.io";
 const INDEX_URL = BASE_URL + "/api/v1/movies/";
 const POSTER_URL = BASE_URL + "/posters/";
 
+const STORAGE_KEY_FAVORITE_MOVIES = "favorite-movies";
+
 const axios = require("axios");
 
 const filters = {
   filterTitle: (movies) => (title) =>
     movies.filter((movie) => movie.title.toLowerCase().includes(title)),
+  exists: (id) => (movies) => movies.some((movie) => movie.id === id),
 };
 
 export default {
@@ -54,6 +59,7 @@ export default {
   data() {
     return {
       movies: [],
+      favorites: [],
       movieToShow: {},
       titleToSearch: "",
       display: "column",
@@ -71,15 +77,14 @@ export default {
   },
   created() {
     this.fetchMovies();
-    this.display = this.$route.params.display;
+    this.fetchFavorite();
+    this.$route.params.display = this.display;
     this.mode = this.$route.params.mode;
   },
 
   mounted() {
-    this.$on("showModal", this.showModal);
     this.$on("search", this.searchMovies);
   },
-
   methods: {
     fetchMovies() {
       //用 axios 接入 API 資料
@@ -95,6 +100,15 @@ export default {
           }));
         })
         .catch((error) => console.log(error));
+    },
+    fetchFavorite() {
+      this.favorites =
+        localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES) !== "undefined"
+          ? JSON.parse(localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES))
+          : [];
+    },
+    isFavorite(id) {
+      return filters.exists(id)(this.favorites);
     },
     showModal(movie) {
       this.movieToShow = movie;

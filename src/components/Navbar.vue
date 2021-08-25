@@ -111,6 +111,7 @@ export default {
     },
     changeDisplay(display) {
       this.display = display;
+      this.$route.params.display = display;
       bus.$emit("changeDisplay", display);
     },
   },

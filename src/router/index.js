@@ -5,24 +5,22 @@ import Movies from '../views/Movies.vue'
 Vue.use(VueRouter)
 
 const routes = [
-    {
-    path: '/',
-    name: 'root',
-    redirect: '/movies',
-  },
   {
     path:'/movies/favorites',
     name:'favorites',
     props:true,
     component: () => import('../views/Favorites.vue')
   },
-
   {
-    path: '/movies',
+    path: '/movies/:display',
     name: 'movies',
     component: Movies,
   },
-
+  {
+    path: '/',
+    name: 'root',
+    redirect:'/movies/column'
+  },
   {
     path: '*',
     name: 'not-found',
