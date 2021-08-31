@@ -29,10 +29,10 @@
 
         <!--     Favorite button           -->
         <b-button
-          v-if="isFavoriteMovie"
+          v-if="isFavorite"
           variant="danger mr-2"
           class="card__btn btn-delete-favorite"
-          @click="deleteFavorite"
+          @click="deleteFavorite(movie.id)"
         >
           -
         </b-button>
@@ -40,7 +40,7 @@
           v-else
           variant="warning"
           class="card__btn btn-add-favorite"
-          @click="addFavorite"
+          @click="addFavorite(movie.id)"
         >
           +
         </b-button>
@@ -73,10 +73,10 @@
 
         <!--     Favorite button           -->
         <b-button
-          v-if="isFavoriteMovie"
+          v-if="isFavorite"
           variant="danger mr-2"
           class="card__btn btn-delete-favorite"
-          @click="deleteFavorite"
+          @click="deleteFavorite(movie.id)"
         >
           -
         </b-button>
@@ -84,7 +84,7 @@
           v-else
           variant="warning"
           class="card__btn btn-add-favorite"
-          @click="addFavorite"
+          @click="addFavorite(movie.id)"
         >
           +
         </b-button>
@@ -112,18 +112,8 @@ export default {
   data() {
     return {
       movie: this.initialMovie,
-      favorites: [],
       display: "column",
-      isFavoriteMovie: this.isFavorite,
     };
-  },
-  watch: {
-    favorites: {
-      handler: function () {
-        this.saveLocalStorage(this.favorites);
-      },
-      deep: true,
-    },
   },
   created() {
     this.display = this.$route.params.display;
@@ -133,26 +123,14 @@ export default {
     emitShowModal() {
       this.$emit("showModal");
     },
-    fetchFavorite() {
-      this.favorites =
-        localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES) !== "undefined"
-          ? JSON.parse(localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES))
-          : [];
-    },
     saveLocalStorage(data) {
       localStorage.setItem(STORAGE_KEY_FAVORITE_MOVIES, JSON.stringify(data));
     },
-    addFavorite() {
-      this.isFavoriteMovie = true;
-      this.fetchFavorite();
-      this.favorites.push(this.movie);
+    addFavorite(movieId) {
+      this.$emit("after-add-favorite", movieId);
     },
-    deleteFavorite() {
-      this.isFavoriteMovie = false;
-      this.fetchFavorite();
-      this.favorites = this.favorites.filter(
-        (movie) => movie.id !== this.movie.id
-      );
+    deleteFavorite(movieId) {
+      this.$emit("after-delete-favorite", movieId);
     },
     changeDisplay(display) {
       this.display = display;

@@ -20,6 +20,8 @@
           :initial-movie="movie"
           :is-favorite="isFavorite(movie.id)"
           @showModal="showModal(movie)"
+          @after-add-favorite="afterAddFavorite"
+          @after-delete-favorite="afterDeleteFavorite"
         />
       </div>
     </div>
@@ -48,6 +50,8 @@ const filters = {
   filterTitle: (movies) => (title) =>
     movies.filter((movie) => movie.title.toLowerCase().includes(title)),
   exists: (id) => (movies) => movies.some((movie) => movie.id === id),
+  findMovie: (id) => (movies) => movies.find((movie) => movie.id === id),
+  filterMovie: (id) => (movies) => movies.filter((movie) => movie.id !== id),
 };
 
 export default {
@@ -73,6 +77,17 @@ export default {
           ? filters.filterTitle(this.movies)(this.titleToSearch)
           : this.movies;
       },
+    },
+  },
+  watch: {
+    favorites: {
+      handler: function () {
+        localStorage.setItem(
+          STORAGE_KEY_FAVORITE_MOVIES,
+          JSON.stringify(this.favorites)
+        );
+      },
+      deep: true,
     },
   },
   created() {
@@ -103,9 +118,16 @@ export default {
     },
     fetchFavorite() {
       this.favorites =
-        localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES) !== "undefined"
+        localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES) !== undefined
           ? JSON.parse(localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES))
           : [];
+    },
+    afterAddFavorite(movieId) {
+      const movie = filters.findMovie(movieId)(this.movies);
+      this.favorites.push(movie);
+    },
+    afterDeleteFavorite(movieId) {
+      this.favorites = filters.filterMovie(movieId)(this.favorites);
     },
     isFavorite(id) {
       return filters.exists(id)(this.favorites);
