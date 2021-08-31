@@ -15,80 +15,14 @@
         class="row"
       >
         <!-- print movie list here -->
-        <div
+        <MovieCard
           v-for="movie in filteredFavorites"
           :key="movie.id"
-          :class="display === 'column' ? 'col-sm-3' : 'col-12'"
-        >
-          <!-- Column -->
-          <div
-            v-if="display === 'column'"
-            class="card mb-2"
-          >
-            <img
-              class="card-img-top"
-              :src="movie.image"
-              alt="Card image cap"
-            >
-            <div class="card-body movie-item-body">
-              <h5 class="card-title">
-                {{ movie.title }}
-              </h5>
-            </div>
-            <!-- "More" button -->
-            <div class="card-footer">
-              <b-button
-                class="card__btn"
-                variant="info mr-2"
-                @click="showModal(movie)"
-              >
-                More
-              </b-button>
-
-              <!--     Favorite button           -->
-              <button
-                class="card__btn btn btn-danger btn-delete-favorite"
-                @click="deleteFavorite(movie.id)"
-              >
-                -
-              </button>
-            </div>
-          </div>
-
-          <!-- List -->
-          <div
-            v-if="display === 'list'"
-            class="col-sm-10 card d-flex flex-row align-items-center"
-            style="margin: 0 auto"
-          >
-            <div class="card-body movie-item-body">
-              <h5 class="card-title m-0">
-                {{ movie.title }}
-              </h5>
-            </div>
-            <!-- "More" button -->
-            <div
-              class="card-footer"
-              style="border: none"
-            >
-              <b-button
-                class="card__btn"
-                variant="info mr-2"
-                @click="showModal(movie)"
-              >
-                More
-              </b-button>
-
-              <!--     Favorite button           -->
-              <button
-                class="card__btn btn btn-danger btn-delete-favorite"
-                @click="deleteFavorite(movie.id)"
-              >
-                -
-              </button>
-            </div>
-          </div>
-        </div>
+          :initial-movie="movie"
+          :is-favorite="isFavorite(movie.id)"
+          @showModal="showModal(movie)"
+          @after-delete-favorite="afterDeleteFavorite"
+        />
       </div>
     </div>
 
@@ -102,6 +36,7 @@
 </template>
 
 <script>
+import MovieCard from "../components/MovieCard.vue";
 import SearchBar from "../components/SearchBar.vue";
 import Modal from "../components/Modal.vue";
 import { bus } from "../main";
@@ -111,11 +46,13 @@ const STORAGE_KEY_FAVORITE_MOVIES = "favorite-movies";
 const filters = {
   filterTitle: (movies) => (title) =>
     movies.filter((movie) => movie.title.toLowerCase().includes(title)),
+  exists: (id) => (movies) => movies.some((movie) => movie.id === id),
 };
 
 export default {
   name: "Favorites",
   components: {
+    MovieCard,
     SearchBar,
     Modal,
   },
@@ -166,8 +103,11 @@ export default {
       this.favorites =
         JSON.parse(localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES)) || [];
     },
-    deleteFavorite(id) {
-      this.favorites = this.favorites.filter((movie) => movie.id !== id);
+    isFavorite(id) {
+      return filters.exists(id)(this.favorites);
+    },
+    afterDeleteFavorite(movieId) {
+      this.favorites = this.favorites.filter((movie) => movie.id !== movieId);
     },
     searchMovies(title) {
       this.titleToSearch = title;
