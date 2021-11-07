@@ -62,8 +62,8 @@ export default {
   },
   data() {
     return {
-      movies: [],
-      favorites: [],
+      sourceType:"",
+      movies:{'all':[], 'favorites':[]},
       movieToShow: {},
       titleToSearch: "",
       display: "column",
@@ -74,22 +74,27 @@ export default {
     filteredMovies: {
       get() {
         return this.titleToSearch
-          ? filters.filterTitle(this.movies)(this.titleToSearch)
-          : this.movies;
+          ? filters.filterTitle(this.movies[this.sourceType])(this.titleToSearch)
+          : this.movies[this.sourceType];
       },
     },
   },
   watch: {
-    favorites: {
+    '$route':{
+      handler:'updateSourceType',
+      immediate:true,
+    },
+    'movies.favorites': {
       handler: function () {
         localStorage.setItem(
           STORAGE_KEY_FAVORITE_MOVIES,
-          JSON.stringify(this.favorites)
+          JSON.stringify(this.movies['favorites'])
         );
       },
       deep: true,
     },
   },
+
   created() {
     this.fetchMovies();
     this.fetchFavorite();
@@ -101,6 +106,9 @@ export default {
     this.$on("search", this.searchMovies);
   },
   methods: {
+    updateSourceType(){
+this.sourceType = this.$route.query.source
+    },
     fetchMovies() {
       //用 axios 接入 API 資料
       axios
@@ -108,7 +116,7 @@ export default {
         .then((response) => {
           // map() 運算原始資料，回傳新的陣列
           // 這裡在 {} 外加 ()，可以自動 return 物件
-          this.movies = response.data.results.map((movie) => ({
+          this.movies['all'] = response.data.results.map((movie) => ({
             // 展開原本的 movie，再複寫要修改的內容
             ...movie,
             image: POSTER_URL + movie.image,
@@ -117,20 +125,20 @@ export default {
         .catch((error) => console.log(error));
     },
     fetchFavorite() {
-      this.favorites =
+      this.movies['favorites'] =
         localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES) !== undefined
           ? JSON.parse(localStorage.getItem(STORAGE_KEY_FAVORITE_MOVIES))
           : [];
     },
     afterAddFavorite(movieId) {
-      const movie = filters.findMovie(movieId)(this.movies);
-      this.favorites.push(movie);
+      const movie = filters.findMovie(movieId)(this.movies['all']);
+      this.movies['favorites'].push(movie);
     },
     afterDeleteFavorite(movieId) {
-      this.favorites = filters.filterMovie(movieId)(this.favorites);
+      this.movies['favorites'] = filters.filterMovie(movieId)(this.movies['favorites']);
     },
     isFavorite(id) {
-      return filters.exists(id)(this.favorites);
+      return filters.exists(id)(this.movies['favorites']);
     },
     showModal(movie) {
       this.movieToShow = movie;
@@ -139,7 +147,7 @@ export default {
     searchMovies(title) {
       this.titleToSearch = title;
     },
-  },
+  }
 };
 </script>
 <style>

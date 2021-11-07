@@ -6,7 +6,7 @@
   >
     <router-link
       class="navbar-brand"
-      :to="{ name: 'root' }"
+      :to="{ name: 'root', query:{source:'all'} }"
     >
       Movie List
     </router-link>
@@ -28,7 +28,7 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <router-link
-            :to="{ name: 'movies', params: { display, mode } }"
+            :to="{ name: 'movies', params: { display, mode }, query:{source:'all'} }"
             class="nav-link"
           >
             Home
@@ -36,7 +36,7 @@
         </li>
         <li class="nav-item">
           <router-link
-            :to="{ name: 'favorites', params: { display, mode } }"
+            :to="{ name:'movies', params: { display, mode }, query:{source:'favorites'} }"
             class="nav-link"
           >
             favorite
