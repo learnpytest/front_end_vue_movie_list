@@ -81,6 +81,10 @@ export default {
   font-weight: 900;
 }
 
+strong.largersize { 
+  font-size: 1.5em; 
+  }
+
 div.card {
   border: 1px solid var(--styled-card-outline);
   background-color: var(--styled-card-inside);

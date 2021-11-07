@@ -8,7 +8,7 @@
       class="navbar-brand"
       :to="{ name: 'root', query:{source:'all'} }"
     >
-      Movie List
+      <h1> Movie List</h1>
     </router-link>
     <button
       class="navbar-toggler"

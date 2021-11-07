@@ -38,6 +38,10 @@ import MovieCard from "../components/MovieCard.vue";
 import Modal from "../components/Modal.vue";
 import SearchBar from "../components/SearchBar.vue";
 
+// 一些工具
+import movieFilter from "../utils/MovieFilter";
+
+
 const BASE_URL = "https://movie-list.alphacamp.io";
 const INDEX_URL = BASE_URL + "/api/v1/movies/";
 const POSTER_URL = BASE_URL + "/posters/";
@@ -46,13 +50,7 @@ const STORAGE_KEY_FAVORITE_MOVIES = "favorite-movies";
 
 const axios = require("axios");
 
-const filters = {
-  filterTitle: (movies) => (title) =>
-    movies.filter((movie) => movie.title.toLowerCase().includes(title)),
-  exists: (id) => (movies) => movies.some((movie) => movie.id === id),
-  findMovie: (id) => (movies) => movies.find((movie) => movie.id === id),
-  filterMovie: (id) => (movies) => movies.filter((movie) => movie.id !== id),
-};
+
 
 export default {
   components: {
@@ -74,7 +72,7 @@ export default {
     filteredMovies: {
       get() {
         return this.titleToSearch
-          ? filters.filterTitle(this.movies[this.sourceType])(this.titleToSearch)
+          ? movieFilter.filterTitle(this.movies[this.sourceType])(this.titleToSearch)
           : this.movies[this.sourceType];
       },
     },
@@ -131,14 +129,14 @@ this.sourceType = this.$route.query.source
           : [];
     },
     afterAddFavorite(movieId) {
-      const movie = filters.findMovie(movieId)(this.movies['all']);
+      const movie = movieFilter.findMovie(movieId)(this.movies['all']);
       this.movies['favorites'].push(movie);
     },
     afterDeleteFavorite(movieId) {
-      this.movies['favorites'] = filters.filterMovie(movieId)(this.movies['favorites']);
+      this.movies['favorites'] = movieFilter.filterMovie(movieId)(this.movies['favorites']);
     },
     isFavorite(id) {
-      return filters.exists(id)(this.movies['favorites']);
+      return movieFilter.exists(id)(this.movies['favorites']);
     },
     showModal(movie) {
       this.movieToShow = movie;
